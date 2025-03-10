@@ -35,6 +35,12 @@ import {
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+
+// Dynamically import the SimpleGlobe component with no SSR
+const SimpleGlobe = dynamic(() => import("@/components/SimpleGlobe"), {
+  ssr: false,
+});
 
 export default function DashboardPage() {
   const [departureCity, setDepartureCity] = useState("");
@@ -45,51 +51,65 @@ export default function DashboardPage() {
   const [layoverWeight, setLayoverWeight] = useState(34);
   const [optimizeLayovers, setOptimizeLayovers] = useState(true);
 
+  // Sample route data for visualization
+  const [selectedRoute, setSelectedRoute] = useState({
+    startLat: 40.7128,
+    startLng: -74.006,
+    endLat: 51.5074,
+    endLng: -0.1278,
+    color: "#ff4d4d",
+  });
+
   return (
-    <div className="flex min-h-screen bg-muted/30">
+    <div className="flex min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
       {/* Sidebar */}
-      <div className="hidden md:flex w-64 flex-col fixed inset-y-0 z-50 bg-card border-r">
-        <div className="flex h-14 items-center border-b px-4">
+      <div className="hidden md:flex w-64 flex-col fixed inset-y-0 z-50 bg-card/70 backdrop-blur-md border-r border-primary/10 shadow-lg shadow-primary/5">
+        <div className="flex h-14 items-center border-b border-primary/10 px-4">
           <Link href="/" className="flex items-center gap-2">
             <Plane className="h-5 w-5 text-primary" />
-            <span className="font-bold">AeroGo</span>
+            <span className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
+              AeroGo
+            </span>
           </Link>
         </div>
         <div className="flex-1 overflow-auto py-2">
           <nav className="grid gap-1 px-2">
             <Link
               href="/dashboard"
-              className="flex items-center gap-3 rounded-md bg-accent px-3 py-2 text-accent-foreground transition-colors"
+              className="flex items-center gap-3 rounded-md bg-gradient-to-r from-primary/20 to-primary/10 backdrop-blur-sm px-3 py-2 text-accent-foreground transition-colors"
             >
               <Home className="h-4 w-4" />
               <span>Dashboard</span>
             </Link>
             <Link
               href="/dashboard/history"
-              className="flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors"
+              className="flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground hover:text-foreground hover:bg-primary/10 transition-all"
             >
               <Clock className="h-4 w-4" />
               <span>History</span>
             </Link>
             <Link
               href="/dashboard/analytics"
-              className="flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors"
+              className="flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground hover:text-foreground hover:bg-primary/10 transition-all"
             >
               <BarChart3 className="h-4 w-4" />
               <span>Analytics</span>
             </Link>
             <Link
               href="/dashboard/settings"
-              className="flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors"
+              className="flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground hover:text-foreground hover:bg-primary/10 transition-all"
             >
               <Settings className="h-4 w-4" />
               <span>Settings</span>
             </Link>
           </nav>
         </div>
-        <div className="border-t p-4">
+        <div className="border-t border-primary/10 p-4">
           <Link href="/">
-            <Button variant="outline" className="w-full justify-start gap-2">
+            <Button
+              variant="outline"
+              className="w-full justify-start gap-2 backdrop-blur-sm bg-background/40 border-primary/20 hover:bg-background/60 transition-all"
+            >
               <LogOut className="h-4 w-4" />
               <span>Log out</span>
             </Button>
@@ -99,23 +119,37 @@ export default function DashboardPage() {
 
       {/* Main content */}
       <div className="flex-1 md:ml-64">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:px-6">
+        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b border-primary/10 bg-background/80 backdrop-blur-md px-4 sm:px-6 shadow-sm shadow-primary/5">
           <div className="flex-1">
-            <h1 className="text-lg font-semibold">Flight Route Optimizer</h1>
+            <h1 className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
+              Flight Route Optimizer
+            </h1>
           </div>
         </header>
 
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-8">
           <Tabs defaultValue="search" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="search">Search Routes</TabsTrigger>
-              <TabsTrigger value="results">Results</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2 bg-muted/50 backdrop-blur-sm">
+              <TabsTrigger
+                value="search"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/20 data-[state=active]:to-primary/10 data-[state=active]:backdrop-blur-md"
+              >
+                Search Routes
+              </TabsTrigger>
+              <TabsTrigger
+                value="results"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/20 data-[state=active]:to-primary/10 data-[state=active]:backdrop-blur-md"
+              >
+                Results
+              </TabsTrigger>
             </TabsList>
             <TabsContent value="search" className="space-y-4 pt-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Card>
+                <Card className="bg-card/70 backdrop-blur-md border-primary/10 shadow-md shadow-primary/5">
                   <CardHeader>
-                    <CardTitle>Route Information</CardTitle>
+                    <CardTitle className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
+                      Route Information
+                    </CardTitle>
                     <CardDescription>
                       Enter your departure and destination cities
                     </CardDescription>
@@ -128,6 +162,7 @@ export default function DashboardPage() {
                         placeholder="Enter departure city"
                         value={departureCity}
                         onChange={(e) => setDepartureCity(e.target.value)}
+                        className="bg-background/50 backdrop-blur-sm border-primary/20 focus:border-primary/50 focus:ring-primary/30"
                       />
                     </div>
                     <div className="space-y-2">
@@ -137,18 +172,25 @@ export default function DashboardPage() {
                         placeholder="Enter destination city"
                         value={destinationCity}
                         onChange={(e) => setDestinationCity(e.target.value)}
+                        className="bg-background/50 backdrop-blur-sm border-primary/20 focus:border-primary/50 focus:ring-primary/30"
                       />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="date">Travel Date</Label>
-                      <Input id="date" type="date" />
+                      <Input
+                        id="date"
+                        type="date"
+                        className="bg-background/50 backdrop-blur-sm border-primary/20 focus:border-primary/50 focus:ring-primary/30"
+                      />
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card>
+                <Card className="bg-card/70 backdrop-blur-md border-primary/10 shadow-md shadow-primary/5">
                   <CardHeader>
-                    <CardTitle>Algorithm Settings</CardTitle>
+                    <CardTitle className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
+                      Algorithm Settings
+                    </CardTitle>
                     <CardDescription>
                       Customize the pathfinding algorithm
                     </CardDescription>
@@ -157,10 +199,13 @@ export default function DashboardPage() {
                     <div className="space-y-2">
                       <Label htmlFor="algorithm">Pathfinding Algorithm</Label>
                       <Select value={algorithm} onValueChange={setAlgorithm}>
-                        <SelectTrigger id="algorithm">
+                        <SelectTrigger
+                          id="algorithm"
+                          className="bg-background/50 backdrop-blur-sm border-primary/20 focus:border-primary/50 focus:ring-primary/30"
+                        >
                           <SelectValue placeholder="Select algorithm" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-background/90 backdrop-blur-md border-primary/20">
                           <SelectItem value="dijkstra">
                             Dijkstra's Algorithm
                           </SelectItem>
@@ -180,6 +225,7 @@ export default function DashboardPage() {
                           id="optimize-layovers"
                           checked={optimizeLayovers}
                           onCheckedChange={setOptimizeLayovers}
+                          className="data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-primary data-[state=checked]:to-primary/80"
                         />
                       </div>
                     </div>
@@ -187,9 +233,11 @@ export default function DashboardPage() {
                 </Card>
               </div>
 
-              <Card>
+              <Card className="bg-card/70 backdrop-blur-md border-primary/10 shadow-md shadow-primary/5">
                 <CardHeader>
-                  <CardTitle>Preference Weighting</CardTitle>
+                  <CardTitle className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
+                    Preference Weighting
+                  </CardTitle>
                   <CardDescription>
                     Adjust the importance of different factors
                   </CardDescription>
@@ -221,6 +269,7 @@ export default function DashboardPage() {
                         setTimeWeight(Math.floor(remaining / 2));
                         setLayoverWeight(Math.ceil(remaining / 2));
                       }}
+                      className="[&>[role=slider]]:bg-gradient-to-r [&>[role=slider]]:from-primary [&>[role=slider]]:to-primary/80 [&>[role=slider]]:border-primary/50 [&>.range]:bg-primary/30"
                     />
                   </div>
                   <div className="space-y-2">
@@ -249,6 +298,7 @@ export default function DashboardPage() {
                         setCostWeight(Math.floor(remaining / 2));
                         setLayoverWeight(Math.ceil(remaining / 2));
                       }}
+                      className="[&>[role=slider]]:bg-gradient-to-r [&>[role=slider]]:from-primary [&>[role=slider]]:to-primary/80 [&>[role=slider]]:border-primary/50 [&>.range]:bg-primary/30"
                     />
                   </div>
                   <div className="space-y-2">
@@ -277,11 +327,12 @@ export default function DashboardPage() {
                         setCostWeight(Math.floor(remaining / 2));
                         setTimeWeight(Math.ceil(remaining / 2));
                       }}
+                      className="[&>[role=slider]]:bg-gradient-to-r [&>[role=slider]]:from-primary [&>[role=slider]]:to-primary/80 [&>[role=slider]]:border-primary/50 [&>.range]:bg-primary/30"
                     />
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Button className="w-full gap-2">
+                  <Button className="w-full gap-2 backdrop-blur-md bg-gradient-to-r from-primary/90 to-primary/70 hover:from-primary hover:to-primary/80 border-0 transition-all shadow-md shadow-primary/10">
                     Find Optimal Routes
                     <ArrowRight className="h-4 w-4" />
                   </Button>
@@ -290,15 +341,17 @@ export default function DashboardPage() {
             </TabsContent>
 
             <TabsContent value="results" className="space-y-4 pt-4">
-              <Card>
+              <Card className="bg-card/70 backdrop-blur-md border-primary/10 shadow-md shadow-primary/5">
                 <CardHeader>
-                  <CardTitle>Optimal Flight Routes</CardTitle>
+                  <CardTitle className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
+                    Optimal Flight Routes
+                  </CardTitle>
                   <CardDescription>
                     Based on your preferences and selected algorithm
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
+                  <div className="rounded-lg border border-primary/10 bg-card/60 backdrop-blur-md text-card-foreground shadow-sm hover:shadow-md hover:shadow-primary/5 transition-all">
                     <div className="p-6 flex flex-col space-y-4">
                       <div className="flex items-center justify-between">
                         <div>
@@ -310,13 +363,15 @@ export default function DashboardPage() {
                           </p>
                         </div>
                         <div className="text-right">
-                          <p className="text-lg font-semibold">$750</p>
+                          <p className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
+                            $750
+                          </p>
                           <p className="text-sm text-muted-foreground">
                             7h 30m
                           </p>
                         </div>
                       </div>
-                      <Separator />
+                      <Separator className="bg-primary/10" />
                       <div className="grid grid-cols-3 gap-4">
                         <div>
                           <p className="text-sm font-medium">Departure</p>
@@ -337,13 +392,25 @@ export default function DashboardPage() {
                           </p>
                         </div>
                       </div>
-                      <Button variant="outline" className="w-full">
+                      <Button
+                        variant="outline"
+                        className="w-full backdrop-blur-sm bg-background/40 border-primary/20 hover:bg-background/60 transition-all"
+                        onClick={() =>
+                          setSelectedRoute({
+                            startLat: 40.7128,
+                            startLng: -74.006,
+                            endLat: 51.5074,
+                            endLng: -0.1278,
+                            color: "#ff4d4d",
+                          })
+                        }
+                      >
                         View Details
                       </Button>
                     </div>
                   </div>
 
-                  <div className="mt-4 rounded-lg border bg-card text-card-foreground shadow-sm">
+                  <div className="mt-4 rounded-lg border border-primary/10 bg-card/60 backdrop-blur-md text-card-foreground shadow-sm hover:shadow-md hover:shadow-primary/5 transition-all">
                     <div className="p-6 flex flex-col space-y-4">
                       <div className="flex items-center justify-between">
                         <div>
@@ -355,13 +422,15 @@ export default function DashboardPage() {
                           </p>
                         </div>
                         <div className="text-right">
-                          <p className="text-lg font-semibold">$620</p>
+                          <p className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
+                            $620
+                          </p>
                           <p className="text-sm text-muted-foreground">
                             9h 15m
                           </p>
                         </div>
                       </div>
-                      <Separator />
+                      <Separator className="bg-primary/10" />
                       <div className="grid grid-cols-3 gap-4">
                         <div>
                           <p className="text-sm font-medium">Departure</p>
@@ -382,7 +451,19 @@ export default function DashboardPage() {
                           </p>
                         </div>
                       </div>
-                      <Button variant="outline" className="w-full">
+                      <Button
+                        variant="outline"
+                        className="w-full backdrop-blur-sm bg-background/40 border-primary/20 hover:bg-background/60 transition-all"
+                        onClick={() =>
+                          setSelectedRoute({
+                            startLat: 40.7128,
+                            startLng: -74.006,
+                            endLat: 51.5074,
+                            endLng: -0.1278,
+                            color: "#4da6ff",
+                          })
+                        }
+                      >
                         View Details
                       </Button>
                     </div>
@@ -390,19 +471,22 @@ export default function DashboardPage() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="bg-card/70 backdrop-blur-md border-primary/10 shadow-md shadow-primary/5">
                 <CardHeader>
-                  <CardTitle>Route Visualization</CardTitle>
+                  <CardTitle className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
+                    Route Visualization
+                  </CardTitle>
                   <CardDescription>
                     Visual representation of the optimal route
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="aspect-video rounded-lg bg-muted flex items-center justify-center">
-                    <Map className="h-16 w-16 text-muted-foreground/50" />
-                    <p className="text-muted-foreground ml-2">
-                      Route map will be displayed here
-                    </p>
+                  <div className="aspect-video rounded-lg bg-transparent overflow-hidden border border-primary/20 shadow-inner shadow-primary/10">
+                    <SimpleGlobe
+                      width="100%"
+                      height="100%"
+                      routes={[selectedRoute]}
+                    />
                   </div>
                 </CardContent>
               </Card>

@@ -21,10 +21,129 @@ import {
   ArrowRight,
 } from "lucide-react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+
+// Dynamically import the SimpleGlobe component with no SSR
+const SimpleGlobe = dynamic(() => import("@/components/SimpleGlobe"), {
+  ssr: false,
+});
 
 export default function RoutePage({ params }: { params: { id: string } }) {
   // In a real app, you would fetch the route data based on the ID
   const routeId = params.id;
+
+  // Sample route data based on ID
+  const routeData = {
+    "1": {
+      from: "New York",
+      to: "London",
+      fromCode: "JFK",
+      toCode: "LHR",
+      fromLat: 40.7128,
+      fromLng: -74.006,
+      toLat: 51.5074,
+      toLng: -0.1278,
+      algorithm: "Dijkstra's",
+      cost: 750,
+      time: "7h 30m",
+      layovers: 0,
+      departureTime: "08:30",
+      arrivalTime: "20:00",
+      date: "June 15, 2024",
+      airline: "British Airways",
+      flightNumber: "BA 178",
+      aircraft: "Boeing 777-300ER",
+      distance: "3,459 miles",
+      color: "#ff4d4d",
+    },
+    "2": {
+      from: "Los Angeles",
+      to: "Tokyo",
+      fromCode: "LAX",
+      toCode: "HND",
+      fromLat: 34.0522,
+      fromLng: -118.2437,
+      toLat: 35.6762,
+      toLng: 139.6503,
+      algorithm: "A*",
+      cost: 1250,
+      time: "11h 45m",
+      layovers: 0,
+      departureTime: "10:15",
+      arrivalTime: "14:00",
+      date: "June 20, 2024",
+      airline: "Japan Airlines",
+      flightNumber: "JL 62",
+      aircraft: "Boeing 787-9",
+      distance: "5,478 miles",
+      color: "#4da6ff",
+    },
+    "3": {
+      from: "Paris",
+      to: "Dubai",
+      fromCode: "CDG",
+      toCode: "DXB",
+      fromLat: 48.8566,
+      fromLng: 2.3522,
+      toLat: 25.2048,
+      toLng: 55.2708,
+      algorithm: "Bellman-Ford",
+      cost: 820,
+      time: "6h 15m",
+      layovers: 0,
+      departureTime: "14:30",
+      arrivalTime: "23:45",
+      date: "July 5, 2024",
+      airline: "Emirates",
+      flightNumber: "EK 76",
+      aircraft: "Airbus A380",
+      distance: "4,172 miles",
+      color: "#ffaa00",
+    },
+    "4": {
+      from: "Sydney",
+      to: "Singapore",
+      fromCode: "SYD",
+      toCode: "SIN",
+      fromLat: -33.8688,
+      fromLng: 151.2093,
+      toLat: 1.3521,
+      toLng: 103.8198,
+      algorithm: "Dijkstra's",
+      cost: 680,
+      time: "8h 20m",
+      layovers: 0,
+      departureTime: "09:20",
+      arrivalTime: "14:40",
+      date: "July 12, 2024",
+      airline: "Singapore Airlines",
+      flightNumber: "SQ 212",
+      aircraft: "Airbus A350-900",
+      distance: "3,915 miles",
+      color: "#00cc88",
+    },
+  }[routeId] || {
+    from: "New York",
+    to: "London",
+    fromCode: "JFK",
+    toCode: "LHR",
+    fromLat: 40.7128,
+    fromLng: -74.006,
+    toLat: 51.5074,
+    toLng: -0.1278,
+    algorithm: "Dijkstra's",
+    cost: 750,
+    time: "7h 30m",
+    layovers: 0,
+    departureTime: "08:30",
+    arrivalTime: "20:00",
+    date: "June 15, 2024",
+    airline: "British Airways",
+    flightNumber: "BA 178",
+    aircraft: "Boeing 777-300ER",
+    distance: "3,459 miles",
+    color: "#ff4d4d",
+  };
 
   return (
     <div className="flex min-h-screen bg-muted/30">
@@ -48,12 +167,12 @@ export default function RoutePage({ params }: { params: { id: string } }) {
                 <div className="flex items-center justify-between">
                   <div>
                     <CardTitle className="text-2xl">
-                      New York to London
+                      {routeData.from} to {routeData.to}
                     </CardTitle>
                     <CardDescription>Route ID: {routeId}</CardDescription>
                   </div>
                   <Badge className="bg-primary/10 text-primary hover:bg-primary/20 border-primary/20">
-                    Dijkstra's Algorithm
+                    {routeData.algorithm} Algorithm
                   </Badge>
                 </div>
               </CardHeader>
@@ -64,21 +183,25 @@ export default function RoutePage({ params }: { params: { id: string } }) {
                     <span className="text-sm text-muted-foreground">
                       Total Cost
                     </span>
-                    <span className="text-2xl font-bold">$750</span>
+                    <span className="text-2xl font-bold">
+                      ${routeData.cost}
+                    </span>
                   </div>
                   <div className="flex flex-col items-center p-4 bg-muted/50 rounded-lg">
                     <Clock className="h-8 w-8 text-primary mb-2" />
                     <span className="text-sm text-muted-foreground">
                       Travel Time
                     </span>
-                    <span className="text-2xl font-bold">7h 30m</span>
+                    <span className="text-2xl font-bold">{routeData.time}</span>
                   </div>
                   <div className="flex flex-col items-center p-4 bg-muted/50 rounded-lg">
                     <Plane className="h-8 w-8 text-primary mb-2" />
                     <span className="text-sm text-muted-foreground">
                       Layovers
                     </span>
-                    <span className="text-2xl font-bold">0</span>
+                    <span className="text-2xl font-bold">
+                      {routeData.layovers}
+                    </span>
                   </div>
                 </div>
               </CardContent>
@@ -103,9 +226,11 @@ export default function RoutePage({ params }: { params: { id: string } }) {
                     <div className="space-y-6">
                       <div className="flex items-start">
                         <div className="min-w-[100px] flex flex-col items-center">
-                          <div className="text-lg font-bold">08:30</div>
+                          <div className="text-lg font-bold">
+                            {routeData.departureTime}
+                          </div>
                           <div className="text-sm text-muted-foreground">
-                            JFK
+                            {routeData.fromCode}
                           </div>
                         </div>
                         <div className="flex-1 px-4">
@@ -113,14 +238,16 @@ export default function RoutePage({ params }: { params: { id: string } }) {
                             <div className="absolute top-0 left-1/2 h-full w-px -translate-x-1/2 bg-border"></div>
                             <Plane className="z-10 h-6 w-6 rotate-90 bg-background p-1 text-primary" />
                             <div className="mt-2 text-center text-sm text-muted-foreground">
-                              7h 30m
+                              {routeData.time}
                             </div>
                           </div>
                         </div>
                         <div className="min-w-[100px] flex flex-col items-center">
-                          <div className="text-lg font-bold">20:00</div>
+                          <div className="text-lg font-bold">
+                            {routeData.arrivalTime}
+                          </div>
                           <div className="text-sm text-muted-foreground">
-                            LHR
+                            {routeData.toCode}
                           </div>
                         </div>
                       </div>
@@ -135,18 +262,18 @@ export default function RoutePage({ params }: { params: { id: string } }) {
                           <div className="space-y-1">
                             <div className="flex items-center gap-2">
                               <Calendar className="h-4 w-4 text-muted-foreground" />
-                              <span className="text-sm">June 15, 2024</span>
+                              <span className="text-sm">{routeData.date}</span>
                             </div>
                             <div className="flex items-center gap-2">
                               <Clock className="h-4 w-4 text-muted-foreground" />
                               <span className="text-sm">
-                                08:30 AM (Local Time)
+                                {routeData.departureTime} (Local Time)
                               </span>
                             </div>
                             <div className="flex items-center gap-2">
                               <Map className="h-4 w-4 text-muted-foreground" />
                               <span className="text-sm">
-                                John F. Kennedy International Airport
+                                {routeData.fromCode} Airport
                               </span>
                             </div>
                           </div>
@@ -157,18 +284,18 @@ export default function RoutePage({ params }: { params: { id: string } }) {
                           <div className="space-y-1">
                             <div className="flex items-center gap-2">
                               <Calendar className="h-4 w-4 text-muted-foreground" />
-                              <span className="text-sm">June 15, 2024</span>
+                              <span className="text-sm">{routeData.date}</span>
                             </div>
                             <div className="flex items-center gap-2">
                               <Clock className="h-4 w-4 text-muted-foreground" />
                               <span className="text-sm">
-                                08:00 PM (Local Time)
+                                {routeData.arrivalTime} (Local Time)
                               </span>
                             </div>
                             <div className="flex items-center gap-2">
                               <Map className="h-4 w-4 text-muted-foreground" />
                               <span className="text-sm">
-                                London Heathrow Airport
+                                {routeData.toCode} Airport
                               </span>
                             </div>
                           </div>
@@ -187,28 +314,32 @@ export default function RoutePage({ params }: { params: { id: string } }) {
                               Airline
                             </span>
                             <p className="text-sm font-medium">
-                              British Airways
+                              {routeData.airline}
                             </p>
                           </div>
                           <div>
                             <span className="text-xs text-muted-foreground">
                               Flight Number
                             </span>
-                            <p className="text-sm font-medium">BA 178</p>
+                            <p className="text-sm font-medium">
+                              {routeData.flightNumber}
+                            </p>
                           </div>
                           <div>
                             <span className="text-xs text-muted-foreground">
                               Aircraft
                             </span>
                             <p className="text-sm font-medium">
-                              Boeing 777-300ER
+                              {routeData.aircraft}
                             </p>
                           </div>
                           <div>
                             <span className="text-xs text-muted-foreground">
                               Distance
                             </span>
-                            <p className="text-sm font-medium">3,459 miles</p>
+                            <p className="text-sm font-medium">
+                              {routeData.distance}
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -226,11 +357,20 @@ export default function RoutePage({ params }: { params: { id: string } }) {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="aspect-video rounded-lg bg-muted flex items-center justify-center">
-                      <Map className="h-16 w-16 text-muted-foreground/50" />
-                      <p className="text-muted-foreground ml-2">
-                        Interactive map will be displayed here
-                      </p>
+                    <div className="aspect-video rounded-lg overflow-hidden border">
+                      <SimpleGlobe
+                        width="100%"
+                        height="100%"
+                        routes={[
+                          {
+                            startLat: routeData.fromLat,
+                            startLng: routeData.fromLng,
+                            endLat: routeData.toLat,
+                            endLng: routeData.toLng,
+                            color: routeData.color,
+                          },
+                        ]}
+                      />
                     </div>
                   </CardContent>
                 </Card>
@@ -251,18 +391,20 @@ export default function RoutePage({ params }: { params: { id: string } }) {
                           <div className="flex items-center gap-2">
                             <Badge variant="outline">A* Algorithm</Badge>
                             <span className="text-sm font-medium">
-                              New York to London
+                              {routeData.from} to {routeData.to}
                             </span>
                           </div>
                           <div className="text-right">
-                            <span className="text-sm font-medium">$620</span>
+                            <span className="text-sm font-medium">
+                              ${Math.round(routeData.cost * 0.85)}
+                            </span>
                           </div>
                         </div>
                         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
                           <Clock className="h-4 w-4" />
-                          <span>9h 15m</span>
+                          <span>{routeData.time.replace("7h", "9h")}</span>
                           <span className="mx-2">•</span>
-                          <span>1 Layover (BOS)</span>
+                          <span>1 Layover</span>
                         </div>
                         <Button
                           variant="outline"
@@ -280,18 +422,20 @@ export default function RoutePage({ params }: { params: { id: string } }) {
                               Bellman-Ford Algorithm
                             </Badge>
                             <span className="text-sm font-medium">
-                              New York to London
+                              {routeData.from} to {routeData.to}
                             </span>
                           </div>
                           <div className="text-right">
-                            <span className="text-sm font-medium">$580</span>
+                            <span className="text-sm font-medium">
+                              ${Math.round(routeData.cost * 0.75)}
+                            </span>
                           </div>
                         </div>
                         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
                           <Clock className="h-4 w-4" />
-                          <span>11h 45m</span>
+                          <span>{routeData.time.replace("7h", "11h")}</span>
                           <span className="mx-2">•</span>
-                          <span>2 Layovers (BOS, DUB)</span>
+                          <span>2 Layovers</span>
                         </div>
                         <Button
                           variant="outline"
