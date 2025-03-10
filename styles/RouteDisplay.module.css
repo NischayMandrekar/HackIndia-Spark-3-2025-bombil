@@ -1,0 +1,117 @@
+.routesContainer {
+  width: 100%;
+  max-width: 800px;
+}
+
+.routesContainer h2 {
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.routesList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.routeCard {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.routeCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.routeCard.selected {
+  border: 2px solid #0070f3;
+}
+
+.routeSummary {
+  padding: 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.routeStats {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.statLabel {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.statValue {
+  font-weight: 600;
+  color: #333;
+}
+
+.routePreview {
+  font-weight: 500;
+  color: #0070f3;
+}
+
+.routeDetails {
+  padding: 1.5rem;
+  border-top: 1px solid #eee;
+  background-color: #f8f9fa;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+}
+
+.segment {
+  display: flex;
+  flex-direction: column;
+}
+
+.segmentPoint {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  height: 40px;
+}
+
+.point {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #0070f3;
+}
+
+.city {
+  font-weight: 500;
+}
+
+.segmentLine {
+  display: flex;
+  margin-left: 5px;
+  padding-left: 1rem;
+}
+
+.line {
+  width: 2px;
+  height: 60px;
+  background-color: #0070f3;
+}
+
+.segmentInfo {
+  margin-left: 1rem;
+  color: #666;
+  font-size: 0.875rem;
+} 
